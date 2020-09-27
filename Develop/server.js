@@ -55,12 +55,20 @@ app.post("/api/notes", function (req, res) {
 });
 
 // DELETE /api/notes/ by id
-// app.delete("/api/notes", function (req, res) {
-// read all notes from db.json
-// let notes = fs.readFileSync("./db/db.json", "utf8");
-// Parses the data to get an array
-// notes = JSON.parse(notes);
-// });
+app.delete("/api/notes/:id", function (req, res) {
+  // read all notes from db.json
+  let notes = fs.readFileSync("./db/db.json", "utf8");
+  // Parses the data to get an array
+  notes = JSON.parse(notes);
+  // filter out note with specific UUID, return the rest
+  notes = notes.filter(function (note) {
+    return note.id != req.params.id;
+  });
+  // Write the remaining notes to the file
+  fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+  // returns the file with the remaining notes
+  res.json(notes);
+});
 
 // remove note with given id
 // rewrite note to db.json
